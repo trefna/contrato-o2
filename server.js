@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-const contractRoutes = require('./routes/contractRoutes');
+const contractRoutes = require('./server/routes/contractRoutes'); // Ajusta la ruta a ./server/routes/contractRoutes
 
 const app = express();
 app.use(cors());
