@@ -1,0 +1,141 @@
+.client-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2em;
+  background: #f9f9f9;
+  border-radius: 5px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+}
+
+.client-form label {
+  margin-bottom: 1em;
+  color: #333333;
+  display: block;
+}
+
+.client-form input {
+  border: 1px solid #cccccc;
+  padding: 0.5em;
+  font-size: 1em;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 3px;
+}
+
+.client-form button {
+  padding: 0.7em;
+  color: #fff;
+  background-color: #007BFF;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 1em;
+}
+
+.client-form button:hover {
+  background-color: #0056b3;
+}
+
+h1, h2, h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #002ECF;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.75em;
+}
+
+h3 {
+  font-size: 1.5em;
+}
+
+p {
+  text-align: justify;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  margin-left: 20px;
+  margin-right: 11px;
+  text-align: left;
+}
+
+.contract-section {
+  margin-bottom: 20px;
+}
+
+.contract-section h5 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.signature-pad {
+  border: 1px solid #ccc;
+  width: 100%;
+  height: 200px;
+}
+
+.signature-container {
+  text-align: left;
+  margin-top: 20px;
+}
+
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.signature-container img {
+  width: 200px;
+  height: auto;
+}
+
+.signatureCanvas  {
+  width: 1200x;
+  height: 598px;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+  .client-form {
+    padding: 1em;
+  }
+
+  .signature-pad {
+    height: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .client-form {
+    padding: 0.5em;
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
+
+  h2 {
+    font-size: 1.25em;
+  }
+
+  h3 {
+    font-size: 1em;
+  }
+
+  .signature-pad {
+    height: 100px;
+  }
+
+  p {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
