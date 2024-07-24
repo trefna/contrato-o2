@@ -4,7 +4,7 @@
     {
       "src": "client/admin-frontend/package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "client/admin-frontend/build" }
+      "config": { "distDir": "client/build" }
     },
     {
       "src": "server.js",
