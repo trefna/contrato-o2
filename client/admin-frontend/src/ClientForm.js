@@ -25,7 +25,7 @@ function ClientForm() {
   };
   fetchContractData();
 }, [contractId]);
-;
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
