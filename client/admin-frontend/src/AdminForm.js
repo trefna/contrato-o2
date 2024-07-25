@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import './AdminForm.css';
 
 function AdminForm() {
-  const [contractData, setContractData] = useState({
-    nombreCliente: '',
+  const [formData, setFormData] = useState({
+    nombre: '',
+    descripcion: '',
     fechaContratacion: '',
     modalidadProducto: '',
     cuotaMensual: '',
@@ -10,6 +12,7 @@ function AdminForm() {
     tipoNumeroMovil: '',
     tipoNumeroFijo: '',
     permanencia: '',
+    nombreCliente: '',
     documentoIdentificativo: '',
     nacionalidad: '',
     telefonoEmail: '',
@@ -17,55 +20,45 @@ function AdminForm() {
     titularCuenta: '',
     numeroPortabilidad: '',
     operadorDonante: '',
-    fechaPortabilidad: ''
+    fechaPortabilidad: '',
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setContractData({
-      ...contractData,
-      [name]: value
-    });
-  };
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/contracts/generate`, {
+      const response = await fetch(`${apiUrl}/api/contracts/generate`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(contractData)
+        body: JSON.stringify(formData),
       });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
       const data = await response.json();
-      console.log('Contract generated:', data);
-      // Handle success (e.g., show a success message or redirect)
+      if (data.success) {
+        alert('Contract generated successfully!');
+      } else {
+        alert('Failed to generate contract.');
+      }
     } catch (error) {
-      console.error('Failed to generate contract:', error);
-      // Handle error (e.g., show an error message)
+      console.error('Error generating contract:', error);
+      alert('Error generating contract.');
     }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>
-        Nombre del Cliente:
-        <input
-          type="text"
-          name="nombreCliente"
-          value={contractData.nombreCliente}
-          onChange={handleChange}
-        />
-      </label>
-      {/* Add other form fields similarly */}
-      <button type="submit">Generar y Enviar Contrato</button>
+      {/* Renderiza los campos de formulario aquí y asocia onChange={handleChange} */}
+      <button type="submit">Generate Contract</button>
     </form>
   );
 }
