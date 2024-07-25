@@ -10,20 +10,22 @@ function ClientForm() {
   const [sigPad, setSigPad] = useState({});
 
   useEffect(() => {
-    const fetchContractData = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/contracts/${contractId}`);
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-        }
-        const data = await response.json();
-        setContractData(data);
-      } catch (error) {
-        console.error('Failed to fetch contract data:', error);
+  const fetchContractData = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/contracts/${contractId}`);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
       }
-    };
-    fetchContractData();
-  }, [contractId]);
+      const data = await response.json();
+      setContractData(data);
+    } catch (error) {
+      console.error('Failed to fetch contract data:', error);
+      alert('Failed to fetch contract data. Please try again later.');
+    }
+  };
+  fetchContractData();
+}, [contractId]);
+;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
