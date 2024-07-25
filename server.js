@@ -16,7 +16,6 @@ app.use('/api/contracts', contractRoutes);
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, 'client/admin-frontend/build')));
 
-// Anything that doesn't match the above, send back index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/admin-frontend/build/index.html'));
 });
