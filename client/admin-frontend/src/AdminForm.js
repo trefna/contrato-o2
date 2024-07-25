@@ -29,7 +29,7 @@ function AdminForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(process.env.REACT_APP_API_URL + '/api/contracts/generate', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/contracts/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
