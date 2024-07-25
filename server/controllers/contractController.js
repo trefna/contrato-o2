@@ -20,7 +20,7 @@ const generateContract = async (req, res) => {
     fs.writeFileSync(contractFile, JSON.stringify(contractData, null, 2));
 
     // Return the contract link to the client
-    res.status(200).send({ success: true, contractLink: `http://localhost:3000/contract/${contractId}` });
+    res.status(200).send({ success: true, contractLink: `${process.env.BASE_URL}/contract/${contractId}` });
   } catch (error) {
     console.error('Error generating contract:', error);
     res.status(500).send({ success: false, message: error.toString() });
