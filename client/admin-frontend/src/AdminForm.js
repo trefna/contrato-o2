@@ -26,32 +26,32 @@ function AdminForm() {
     setContract({ ...contract, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/contracts/generate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(contract),
-      });
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/contracts/generate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(contract),
+    });
 
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      if (data.success) {
-        alert(`Contract link generated: ${data.contractLink}`);
-      } else {
-        alert('Error generating contract.');
-      }
-    } catch (error) {
-      console.error('Failed to generate contract:', error);
-      alert('Failed to generate contract. Please try again later.');
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
     }
-  };
+
+    const data = await response.json();
+    if (data.success) {
+      alert(`Contract link generated: ${data.contractLink}`);
+    } else {
+      alert('Error generating contract.');
+    }
+  } catch (error) {
+    console.error('Failed to generate contract:', error);
+    alert('Failed to generate contract. Please try again later.');
+  }
+};
 
   return (
     <form onSubmit={handleSubmit} className="admin-form">
