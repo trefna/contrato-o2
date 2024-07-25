@@ -8,18 +8,24 @@ const generateContract = async (req, res) => {
   try {
     const contractData = req.body;
 
-    // Generate a unique ID for the contract
+    // Generar un ID único para el contrato
     const contractId = Date.now().toString();
+    console.log(`Generating contract with ID: ${contractId}`);
 
-    // Save the contract data to a JSON file for later use
+    // Guardar los datos del contrato en un archivo JSON para uso posterior
     const contractsDir = path.join(__dirname, '../contracts');
+    console.log(`Contracts directory path: ${contractsDir}`);
+
     if (!fs.existsSync(contractsDir)) {
+      console.log('Contracts directory does not exist, creating it.');
       fs.mkdirSync(contractsDir);
     }
+
     const contractFile = `${contractsDir}/${contractId}.json`;
     fs.writeFileSync(contractFile, JSON.stringify(contractData, null, 2));
+    console.log(`Contract saved at: ${contractFile}`);
 
-    // Return the contract link to the client
+    // Devolver el enlace del contrato al cliente
     res.status(200).send({ success: true, contractLink: `${process.env.BASE_URL}/contract/${contractId}` });
   } catch (error) {
     console.error('Error generating contract:', error);
@@ -35,14 +41,14 @@ const signContract = async (req, res) => {
     const contractsDir = path.join(__dirname, '../contracts');
     const contractFile = `${contractsDir}/${contractId}.json`;
 
-    // Load the contract data
+    // Cargar los datos del contrato
     if (!fs.existsSync(contractFile)) {
       return res.status(404).send({ success: false, message: 'Contract not found' });
     }
     const contractData = JSON.parse(fs.readFileSync(contractFile));
     console.log('Loaded contract data:', contractData);
 
-    // Generate the PDF
+    // Generar el PDF
     const fileName = `${contractsDir}/${contractId}-signed.pdf`;
     const doc = new PDFDocument();
     doc.pipe(fs.createWriteStream(fileName));
@@ -92,7 +98,7 @@ const signContract = async (req, res) => {
 
     doc.end();
 
-    // Send the signed contract via email
+    // Enviar el contrato firmado por correo electrónico
     let transporter = nodemailer.createTransport({
       service: 'hotmail',
       auth: {
