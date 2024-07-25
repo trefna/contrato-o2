@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config();
+require('dotenv').config();  // Cargar las variables de entorno desde el archivo .env
 
 const generateContract = async (req, res) => {
   try {
@@ -18,11 +18,6 @@ const generateContract = async (req, res) => {
     }
     const contractFile = `${contractsDir}/${contractId}.json`;
     fs.writeFileSync(contractFile, JSON.stringify(contractData, null, 2));
-
-    // Log the contract generation
-    console.log(`Generating contract with ID: ${contractId}`);
-    console.log(`Contracts directory path: ${contractsDir}`);
-    console.log(`Contract saved at: ${contractFile}`);
 
     // Return the contract link to the client
     res.status(200).send({ success: true, contractLink: `${process.env.BASE_URL}/contract/${contractId}` });
