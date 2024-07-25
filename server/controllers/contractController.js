@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config();  // Cargar las variables de entorno desde el archivo .env
+require('dotenv').config();
 
 const generateContract = async (req, res) => {
   try {
