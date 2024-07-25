@@ -10,7 +10,6 @@ const generateContract = async (req, res) => {
 
     // Generate a unique ID for the contract
     const contractId = Date.now().toString();
-    console.log(`Generating contract with ID: ${contractId}`);
 
     // Save the contract data to a JSON file for later use
     const contractsDir = path.join(__dirname, '../contracts');
@@ -19,8 +18,6 @@ const generateContract = async (req, res) => {
     }
     const contractFile = `${contractsDir}/${contractId}.json`;
     fs.writeFileSync(contractFile, JSON.stringify(contractData, null, 2));
-
-    console.log(`Contract saved at: ${contractFile}`);
 
     // Return the contract link to the client
     res.status(200).send({ success: true, contractLink: `${process.env.BASE_URL}/contract/${contractId}` });
@@ -75,78 +72,51 @@ const signContract = async (req, res) => {
     doc.text(`Dirección de instalación: ${contractData.direccion}`);
     doc.moveDown();
 
-    doc.fontSize(14).text('DATOS DE FACTURACIÓN DEL CLIENTE');
+    doc.fontSize(14).text('DATOS DE LA CUENTA DE CARGO');
     doc.fontSize(12).text(`Titular de la cuenta: ${contractData.titularCuenta}`);
-    doc.text(`Domiciliación bancaria: ${bankDetails}`);
+    doc.text(`Número de cuenta (IBAN): ${bankDetails}`);
     doc.moveDown();
 
-    doc.fontSize(14).text('DATOS DE SOLICITUD DE PORTABILIDAD DE LÍNEA MÓVIL PRINCIPAL');
-    doc.fontSize(12).text(`Número de teléfono a portar como Línea Móvil Principal: ${contractData.numeroPortabilidad}`);
+    doc.fontSize(14).text('DATOS DE LA PORTABILIDAD');
+    doc.fontSize(12).text(`Número que solicita portabilidad: ${contractData.numeroPortabilidad}`);
     doc.text(`Operador donante: ${contractData.operadorDonante}`);
-    doc.text(`Fecha deseada para portar: ${contractData.fechaPortabilidad}`);
+    doc.text(`Fecha en la que solicita la portabilidad: ${contractData.fechaPortabilidad}`);
     doc.moveDown();
 
-    doc.fontSize(12).text(`La firma del documento acredita la contratación por el cliente de los servicios arriba referenciados, cuya prestación está en el caso de la línea telefónica fija con Banda Ancha, no obstante, supeditada a la disponibilidad y cobertura del servicio de Fibra en el domicilio del cliente. El firmante declara que los datos incorporados a este contrato son correctos y autoriza a 02 a la verificación de los mismos. Asimismo, el cliente declara conocer y aceptaren su totalidad las Condiciones de contratación y prestación de los servicios y las tarifas aplicables a los mismos como parte integrante de este contrato y que, además de estar a su disposición en el apartado de “Condiciones legales" de www.o2online.es, le son facilitadas en este momento. Ambas partes, en prueba de conformidad, firman el presente contrato.`);
+    doc.fontSize(14).text('FIRMA');
+    doc.fontSize(12).text(`Firma del cliente: ${signature}`);
     doc.moveDown();
 
-    doc.text('Firma del cliente:', { continued: true }).moveDown(6);
-    doc.image(signature, { fit: [250, 100], align: 'center' });
-    doc.text('Firma apoderado 02:').image(path.join(__dirname, '../assets/signature.png'), { fit: [100, 50], align: 'center' });
+    doc.fontSize(14).text('Confirmación y Envío del Contrato');
+    doc.fontSize(12).text(`Confirmo que la información proporcionada es correcta y autorizo a O2 a proceder con la activación de los servicios contratados según los términos y condiciones especificados en este documento.`);
+    doc.moveDown();
 
     doc.end();
 
-    // Send the signed contract via email
-    let transporter = nodemailer.createTransport({
-      service: 'hotmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
-    });
+    console.log('PDF generated at:', fileName);
 
-    let mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: 'movistar.o2@infocliente.es',
-      subject: 'Contrato Firmado',
-      text: 'Por favor, encuentre adjunto el contrato firmado.',
-      attachments: [
-        {
-          filename: 'contract-signed.pdf',
-          path: fileName
-        }
-      ]
-    };
-
-    transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        console.error('Error sending email:', error);
-        res.status(500).send({ success: false, message: error.toString() });
-      } else {
-        res.status(200).send({ success: true, message: 'Contract sent!' });
-      }
-    });
+    // Return success response
+    res.status(200).send({ success: true, message: 'Contract signed successfully', pdfLink: `${process.env.BASE_URL}/contracts/${contractId}-signed.pdf` });
   } catch (error) {
     console.error('Error signing contract:', error);
     res.status(500).send({ success: false, message: error.toString() });
   }
 };
 
-const getContract = async (req, res) => {
-  try {
-    const contractId = req.params.contractId;
-    const contractsDir = path.join(__dirname, '../contracts');
-    const contractFile = `${contractsDir}/${contractId}.json`;
+const getContract = (req, res) => {
+  const { contractId } = req.params;
+  const contractPath = path.join(__dirname, '../contracts', `${contractId}.json`);
 
-    if (!fs.existsSync(contractFile)) {
-      return res.status(404).send({ success: false, message: 'Contract not found' });
-    }
-
-    const contractData = JSON.parse(fs.readFileSync(contractFile));
-    res.status(200).send(contractData);
-  } catch (error) {
-    console.error('Error fetching contract:', error);
-    res.status(500).send({ success: false, message: error.toString() });
+  if (!fs.existsSync(contractPath)) {
+    return res.status(404).send({ success: false, message: 'Contract not found' });
   }
+
+  const contractData = JSON.parse(fs.readFileSync(contractPath));
+  res.status(200).send({ success: true, contractData });
 };
 
-module.exports = { generateContract, signContract, getContract };
+module.exports = {
+  generateContract,
+  signContract,
+  getContract,
+};
