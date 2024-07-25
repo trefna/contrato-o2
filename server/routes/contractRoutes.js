@@ -1,7 +1,6 @@
 const express = require('express');
-const { generateContract, signContract, getContract } = require('../controllers/contractController');
-
 const router = express.Router();
+const { generateContract, signContract, getContract } = require('../controllers/contractController');
 
 router.post('/generate', generateContract);
 router.post('/sign', signContract);
