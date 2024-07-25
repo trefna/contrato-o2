@@ -1,8 +1,5 @@
-import React, { useState } from 'react';
-import './AdminForm.css';
-
 function AdminForm() {
-  const [contractData, setContractData] = useState({
+  const [contract, setContract] = useState({
     fechaContratacion: '',
     modalidadProducto: '',
     cuotaMensual: '',
@@ -16,49 +13,107 @@ function AdminForm() {
     telefonoEmail: '',
     direccion: '',
     titularCuenta: '',
-    numeroPortabilidad: '',
     operadorDonante: '',
     fechaPortabilidad: '',
+    firma: '',
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setContractData({ ...contractData, [name]: value });
+    setContract({ ...contract, [name]: value });
   };
 
-  const onSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/contracts/generate`, {
+      const response = await fetch(process.env.REACT_APP_API_URL + '/api/contracts/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(contractData),
+        body: JSON.stringify(contract),
       });
+
       if (!response.ok) {
-        throw new Error('Error: ' + response.statusText);
+        throw new Error(`Error: ${response.statusText}`);
       }
+
       const data = await response.json();
-      alert('Contract generated successfully: ' + data.contractLink);
+      if (data.success) {
+        alert(`Contract link generated: ${data.contractLink}`);
+      } else {
+        alert('Error generating contract.');
+      }
     } catch (error) {
       console.error('Failed to generate contract:', error);
-      alert('Failed to generate contract: ' + error.message);
+      alert('Failed to generate contract. Please try again later.');
     }
   };
 
   return (
-    <div className="admin-form-container">
-      <form onSubmit={onSubmit} className="admin-form">
-        {/* Campos del formulario para ingresar los datos del contrato */}
-        <label>
-          Fecha de contratación:
-          <input type="datetime-local" name="fechaContratacion" value={contractData.fechaContratacion} onChange={handleChange} required />
-        </label>
-        {/* Agrega más campos según sea necesario */}
-        <button type="submit">Generar y enviar contrato</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit} className="admin-form">
+      <label>
+        Fecha y hora de la contratación:
+        <input type="datetime-local" name="fechaContratacion" onChange={handleChange} required />
+      </label>
+      <label>
+        Modalidad y Producto contratado:
+        <input type="text" name="modalidadProducto" onChange={handleChange} required />
+      </label>
+      <label>
+        Cuota mensual:
+        <input type="text" name="cuotaMensual" onChange={handleChange} required />
+      </label>
+      <label>
+        Líneas Móviles Adicionales:
+        <input type="text" name="lineasAdicionales" onChange={handleChange} required />
+      </label>
+      <label>
+        Tipo de Número de la Línea Portabilidad Móvil Principal:
+        <input type="text" name="tipoNumeroMovil" onChange={handleChange} required />
+      </label>
+      <label>
+        Tipo de Número de la Línea Alta Fija:
+        <input type="text" name="tipoNumeroFijo" onChange={handleChange} required />
+      </label>
+      <label>
+        Compromiso de permanencia:
+        <input type="text" name="permanencia" onChange={handleChange} required />
+      </label>
+      <label>
+        Nombre completo del cliente:
+        <input type="text" name="nombreCliente" onChange={handleChange} required />
+      </label>
+      <label>
+        Tipo y número de Documento Identifcativo:
+        <input type="text" name="documentoIdentificativo" onChange={handleChange} required />
+      </label>
+      <label>
+        Nacionalidad:
+        <input type="text" name="nacionalidad" onChange={handleChange} required />
+      </label>
+      <label>
+        Teléfono de contacto y E-mail:
+        <input type="text" name="telefonoEmail" onChange={handleChange} required />
+      </label>
+      <label>
+        Dirección de instalación:
+        <input type="text" name="direccion" onChange={handleChange} required />
+      </label>
+      <label>
+        Titular de la cuenta:
+        <input type="text" name="titularCuenta" onChange={handleChange} required />
+      </label>
+      <label>
+        Operador donante:
+        <input type="text" name="operadorDonante" onChange={handleChange} required />
+      </label>
+      <label>
+        Fecha deseada para portar:
+        <input type="datetime-local" name="fechaPortabilidad" onChange={handleChange} required />
+      </label>
+      <button type="submit">Generar y Enviar Contrato</button>
+    </form>
   );
 }
 
