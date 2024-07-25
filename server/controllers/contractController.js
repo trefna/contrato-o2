@@ -136,4 +136,19 @@ const signContract = async (req, res) => {
 const getContract = async (req, res) => {
   try {
     const contractId = req.params.contractId;
-    const contr
+    const contractsDir = path.join(__dirname, '../contracts');
+    const contractFile = `${contractsDir}/${contractId}.json`;
+
+    if (!fs.existsSync(contractFile)) {
+      return res.status(404).send({ success: false, message: 'Contract not found' });
+    }
+
+    const contractData = JSON.parse(fs.readFileSync(contractFile));
+    res.status(200).send(contractData);
+  } catch (error) {
+    console.error('Error fetching contract:', error);
+    res.status(500).send({ success: false, message: error.toString() });
+  }
+};
+
+module.exports = { generateContract, signContract, getContract };
