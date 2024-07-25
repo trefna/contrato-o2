@@ -153,3 +153,4 @@ const getContract = async (req, res) => {
 };
 
 module.exports = { generateContract, signContract, getContract };
+
