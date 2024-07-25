@@ -28,7 +28,7 @@ function AdminForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('http://localhost:5000/api/contracts/generate', {
+    const response = await fetch('https://online-o2-firma-contratos-f4bbf86ac103.herokuapp.com/api/contracts/generate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
