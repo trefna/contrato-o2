@@ -10,6 +10,7 @@ const generateContract = async (req, res) => {
 
     // Generate a unique ID for the contract
     const contractId = Date.now().toString();
+    console.log(`Generating contract with ID: ${contractId}`);
 
     // Save the contract data to a JSON file for later use
     const contractsDir = path.join(__dirname, '../contracts');
@@ -18,6 +19,8 @@ const generateContract = async (req, res) => {
     }
     const contractFile = `${contractsDir}/${contractId}.json`;
     fs.writeFileSync(contractFile, JSON.stringify(contractData, null, 2));
+
+    console.log(`Contract saved at: ${contractFile}`);
 
     // Return the contract link to the client
     res.status(200).send({ success: true, contractLink: `${process.env.BASE_URL}/contract/${contractId}` });
