@@ -1,32 +1,15 @@
 import React, { useState } from 'react';
-import './AdminForm.css';
 
 function AdminForm() {
   const [contractData, setContractData] = useState({
-    fechaContratacion: '',
-    modalidadProducto: '',
-    cuotaMensual: '',
-    lineasAdicionales: '',
-    tipoNumeroMovil: '',
-    tipoNumeroFijo: '',
-    permanencia: '',
     nombreCliente: '',
     documentoIdentificativo: '',
-    nacionalidad: '',
-    telefonoEmail: '',
-    direccion: '',
-    titularCuenta: '',
-    numeroPortabilidad: '',
-    operadorDonante: '',
-    fechaPortabilidad: ''
+    // otros campos del contrato
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setContractData((prevData) => ({
-      ...prevData,
-      [name]: value
-    }));
+    setContractData({ ...contractData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -39,35 +22,24 @@ function AdminForm() {
         },
         body: JSON.stringify(contractData),
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to generate contract');
-      }
-
       const data = await response.json();
-      alert(`Contract generated! Link: ${data.contractLink}`);
+      if (data.success) {
+        alert('Contract generated successfully!');
+      } else {
+        alert('Failed to generate contract.');
+      }
     } catch (error) {
-      console.error('Failed to generate contract:', error);
-      alert('Failed to generate contract');
+      console.error('Error:', error);
+      alert('Error generating contract.');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="admin-form">
-      <h2>Generate Contract</h2>
-      {Object.keys(contractData).map((key) => (
-        <div key={key} className="form-group">
-          <label>{key.replace(/([A-Z])/g, ' $1')}</label>
-          <input
-            type="text"
-            name={key}
-            value={contractData[key]}
-            onChange={handleChange}
-            required
-          />
-        </div>
-      ))}
-      <button type="submit">Generate</button>
+    <form onSubmit={handleSubmit}>
+      <input type="text" name="nombreCliente" value={contractData.nombreCliente} onChange={handleChange} placeholder="Nombre del Cliente" required />
+      <input type="text" name="documentoIdentificativo" value={contractData.documentoIdentificativo} onChange={handleChange} placeholder="Documento Identificativo" required />
+      {/* otros campos del formulario */}
+      <button type="submit">Generar Contrato</button>
     </form>
   );
 }
