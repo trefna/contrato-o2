@@ -27,27 +27,19 @@ function ClientForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const sigData = sigPad.getTrimmedCanvas().toDataURL('image/png');
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/contracts/sign`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ contractId, bankDetails, signature: sigData }),
-      });
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-      const data = await response.json();
-      if (data.success) {
-        alert('Contract signed and sent!');
-      } else {
-        alert('Error signing contract.');
-      }
-    } catch (error) {
-      console.error('Failed to sign contract:', error);
-      alert('Failed to sign contract. Please try again later.');
+    const sigData = sigPad.getTrimmedCanvas().toDataURL('image/png');
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/contracts/sign`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ contractId, bankDetails, signature: sigData }),
+    });
+    const data = await response.json();
+    if (data.success) {
+      alert('Contract signed and sent!');
+    } else {
+      alert('Error signing contract.');
     }
   };
 
@@ -70,7 +62,7 @@ function ClientForm() {
       <p><strong>Compromiso de permanencia:</strong> {contractData.permanencia}</p>
       <h3>DATOS IDENTIFICATEOS DEL CLIENTE</h3>
       <p><strong>Nombre completo del cliente:</strong> {contractData.nombreCliente}</p>
-      <p><strong>Tipo y número de Documento Identificativo:</strong> {contractData.documentoIdentificativo}</p>
+      <p><strong>Tipo y número de Documento Identifcativo:</strong> {contractData.documentoIdentificativo}</p>
       <p><strong>Nacionalidad:</strong> {contractData.nacionalidad}</p>
       <p><strong>Teléfono de contacto y E-mail:</strong> {contractData.telefonoEmail}</p>
       <p><strong>Dirección de instalación:</strong> {contractData.direccion}</p>
